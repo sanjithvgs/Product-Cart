@@ -5,9 +5,13 @@ import CartPage from './components/CartPage';
 import ErrorPage from './components/ErrorPage';
 import ProductListPage from './components/ProductListPage';
 import Header from './components/Header';
+import { Provider } from 'react-redux';
+import store from './store/store';
 
 function App() {
   return (
+
+    <Provider store={store}>
 
     <BrowserRouter>
     <Header />
@@ -18,6 +22,7 @@ function App() {
     </Routes>
     </BrowserRouter>
 
+    </Provider>
   );
 }
 
