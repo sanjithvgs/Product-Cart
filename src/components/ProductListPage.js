@@ -14,7 +14,7 @@ const ProductListPage = () => {
             .then(data => dispatch(setProduct(data)));
     },[])
 
-    const handleAddToCart = (e) => {
+    const handleAddToCart = () => (e) => {
         const productId = e.target.dataset.id;
         dispatch(addToCart(productId));
     }
@@ -38,7 +38,7 @@ const ProductListPage = () => {
               <span class="text-blue-500 font-bold mt-2">${product.price}</span>
               <button
                 class="bg-blue-500 text-white px-4 py-2 rounded-md mt-4 mx-2 hover:bg-blue-800" 
-                onClick={handleAddToCart}
+                onClick={handleAddToCart(product.price)}
                 data-id={product.id}>
                 Add to Cart
               </button>

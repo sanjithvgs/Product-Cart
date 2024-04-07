@@ -1,5 +1,7 @@
 import { useSelector, useDispatch } from 'react-redux';
 import { getProduct } from '../reducers/productList.reducer';
+import { changeQuantity, decrement, deleteFromCart, increment } from '../reducers/cart.reducer';
+import { useEffect, useState } from 'react';
 
 const CartPage = () => {
 
@@ -11,7 +13,37 @@ const CartPage = () => {
         return productList.find(product=> product.id == productID);
     }
 
-    console.log(cartItems);
+
+    const handleRemoveItem = (e) =>{
+        const delProduct = e.target.dataset.id;
+        dispatch(deleteFromCart(delProduct));
+    }
+
+    const handleIncreaseQuantity = (productID) => (e) =>{
+        dispatch(increment(productID));
+    }
+
+    const handleDecreaseQuantity = (productID) => (e) =>{
+        dispatch(decrement(productID)); 
+    }
+
+    const handleChange = (productID) => (e) =>{
+        const value = e.target.value;
+        dispatch(changeQuantity({productID, value}));
+    }
+
+    const [total, updateTotal] =useState(0);
+
+    useEffect(()=>{
+      let newTotal = 0;
+          Object.keys(cartItems).forEach(productId =>{
+            const product = getProduct(productId);
+            newTotal += product.price * cartItems[product.id];
+          });
+          updateTotal(newTotal);
+    }, [cartItems]);
+
+      console.log(cartItems);
     return(
         <div className="container mx-auto my-8">
         <h1 className="text-3xl font-bold mb-6">Shopping Cart</h1>
@@ -37,7 +69,7 @@ const CartPage = () => {
                     <button
                   onclick="decreaseQuantity('quantity1')"
                   class="bg-gray-300 text-gray-700 px-2 py-1 rounded-md"
-                //   onClick={handleDecreaseQuantity(productId)}
+                  onClick={handleDecreaseQuantity(productId)}
                 >
                   -
                 </button>
@@ -47,19 +79,20 @@ const CartPage = () => {
                       className="border rounded-md px-2 py-1 mx-2"
                       value={cartItems[productId]}
                       min="1"
-                      readOnly 
+                      onChange={handleChange(productId)}
                     />
                 <button
                   onclick="decreaseQuantity('quantity1')"
                   class="bg-gray-300 text-gray-700 px-2 py-1 rounded-md"
-                //   onClick={handleDecreaseQuantity(productId)}
+                  onClick={handleIncreaseQuantity(productId)}
                 >
                   +
                 </button>
                   </div>
                   <button
                 class="bg-red-500 text-white px-4 py-2 rounded-md mt-2"
-                // onClick={handleRemoveItem(productId)}
+                onClick={handleRemoveItem}
+                data-id={productId}
               >
                 Remove
               </button>
@@ -71,7 +104,7 @@ const CartPage = () => {
 
   
         <div className="mt-8">
-          <h2 className="text-xl font-bold mb-4">Total: $10.00</h2> 
+          <h2 className="text-xl font-bold mb-4">Total: ${total}</h2> 
           <button className="bg-blue-500 text-white px-4 py-2 rounded-md">
             Checkout
           </button>

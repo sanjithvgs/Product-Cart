@@ -12,28 +12,29 @@ export const cartSlice = createSlice({
   initialState,
   reducers: {
     addToCart: (state, action) => {
-        if (state.items.hasOwnProperty(action.payload)){
-            state.items[action.payload] =+1;
-        }else{
-            state.items[action.payload] =1;
-        };
-        
+        state.items[action.payload] =1; 
     },
 
     deleteFromCart: (state, action) =>{
-
+        delete state.items[action.payload];
     },
 
     increment: (state, action) =>{
-
+        state.items[action.payload] +=1;
     },
 
     decrement: (state, action) =>{
-
+        if (state.items[action.payload]<=1){
+            delete state.items[action.payload];
+        }else{
+        state.items[action.payload] -=1
+        }
     },
      
     changeQuantity: (state, action) =>{
-
+        const productID = action.payload.productID;
+        const value = action.payload.value;
+        state.items[productID] = Number(value);
     }
 
     },
